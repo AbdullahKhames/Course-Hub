@@ -3,7 +3,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from models.base_model import Base
 
-
 class SessionManagement:
     __engine = None
     session = None
@@ -18,10 +17,10 @@ class SessionManagement:
                                     CH_MYSQL_PWD,
                                     CH_MYSQL_HOST,
                                     CH_MYSQL_DB)
-        self.__engine = create_engine(SQLALCHEMY_DATABASE_URI, 
-                                      pool_size=10,
+        self.__engine = create_engine(SQLALCHEMY_DATABASE_URI,
+                                      pool_size=20,
                                       max_overflow=30,
-                                      pool_timeout=60, 
+                                      pool_timeout=60,
                                       pool_recycle=3600)
         # self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
         #                         format(CH_MYSQL_USER,
@@ -43,3 +42,11 @@ class SessionManagement:
     def session_status(self):
         """Returns the status of the session."""
         return self.session.is_active
+
+    def get_engine(self):
+        """Returns the engine instance."""
+        return self.__engine
+
+    def get_session(self):
+        """Returns the session instance."""
+        return self.session
