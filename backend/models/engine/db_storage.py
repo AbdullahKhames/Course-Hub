@@ -17,8 +17,7 @@ from models.admin import Admin
 from os import getenv
 from utils import sess_manager
 from models.base_model import Base
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+
 
 classes = {"User": User, "Course": Course, "Section": Section,
            "Lesson": Lesson, "Category": Category, "Student": Student,
