@@ -1,0 +1,39 @@
+    posts a new user
+    ---
+    tags:
+      - Auth
+    parameters:
+      - in: body
+        name: UserSchema
+        description: User data
+        required: true
+        schema:
+          $ref: '#/definitions/UserSchema'
+
+    responses:
+      201:
+        description: successfully created user
+
+    definitions:
+      UserSchema:
+        type: object
+        properties:
+          email:
+            type: string
+            format: email
+            example: user@example.com
+          name:
+            type: string
+            example: John Doe
+          password:
+            type: string
+            example: password123
+          confirmPassword:
+            type: string
+            example: password123
+          role:
+            type: integer
+            example: 1
+          age:
+            type: integer
+            example: 25
