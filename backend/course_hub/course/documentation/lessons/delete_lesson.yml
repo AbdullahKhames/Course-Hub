@@ -1,0 +1,17 @@
+Delete a Lesson
+---
+tags:
+  - Lessons
+
+parameters:
+  - name: lesson_id
+    in: path
+    type: string
+    required: true
+    description: The id of the lesson to retrieve
+
+responses:
+  404:
+    description: lesson not found!
+  200:
+    description: request executed successfully

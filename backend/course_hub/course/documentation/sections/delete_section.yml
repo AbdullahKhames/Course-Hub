@@ -1,0 +1,17 @@
+Delete a Section
+---
+tags:
+  - Sections
+
+parameters:
+  - name: section_id
+    in: path
+    type: string
+    required: true
+    description: The id of the section to retrieve
+
+responses:
+  404:
+    description: section not found!
+  200:
+    description: request executed successfully

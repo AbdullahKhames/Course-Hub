@@ -1,0 +1,31 @@
+post a new secton in course
+---
+tags:
+  - Sections
+
+parameters:
+  - name: course_id
+    in: path
+    type: string
+    required: true
+    description: The id of the course to retrieve
+
+  - name: section
+    in: body
+    required: true
+    requires:
+      - name:
+      - section_num:
+    properties:
+      name:
+        type: string
+      section_num:
+        type: integer
+
+responses:
+  400:
+    description: Not a json
+  422:
+    description: validation error
+  201:
+    description: successfully created section

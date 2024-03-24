@@ -1,0 +1,30 @@
+update course information
+---
+tags:
+  - Sections
+parameters:
+  - name: section_id
+    in: path
+    type: string
+    required: true
+    description: The id of the section to update
+  - name: update_request
+    in: body
+    required: true
+    properties:
+      name:
+        type: string
+      section_number:
+        type: integer
+      course_id:
+        type: string
+
+responses:
+  404:
+    description: section not found!
+  400:
+    description: Not a json
+  422:
+    description: validation error
+  200:
+    description: request executed successfully
