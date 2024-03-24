@@ -1,0 +1,15 @@
+    Deletes a course
+    ---
+    tags:
+      - Courses
+    parameters:
+      - name: course_id
+        in: path
+        type: string
+        required: true
+        description: The unique id of the course
+    responses:
+      404:
+        description: course not found!
+      200:
+        description: request executed successfully

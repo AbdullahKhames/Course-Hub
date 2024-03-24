@@ -1,0 +1,26 @@
+updates category information
+---
+tags:
+  - Categories
+parameters:
+  - name: category_id
+    in: path
+    type: string
+    required: true
+    description: The id of the category to update
+  - name: update_request
+    in: body
+    required: true
+    properties:
+      name:
+        type: string
+
+responses:
+  404:
+    description: category not found!
+  400:
+    description: Not a json
+  422:
+    description: validation error
+  200:
+    description: request executed successfully

@@ -1,0 +1,21 @@
+post a new category
+---
+tags:
+  - Categories
+parameters:
+  - name: category
+    in: body
+    required: true
+    requires:
+      - name:
+    properties:
+      name:
+        type: string
+
+responses:
+  400:
+    description: Not a json
+  422:
+    description: validation error
+  201:
+    description: successfully created category

@@ -1,0 +1,34 @@
+    updates course information
+    ---
+    tags:
+      - Courses
+    parameters:
+      - name: course_id
+        in: path
+        type: string
+        required: true
+        description: The id of the course to update
+      - name: update_request
+        in: body
+        required: true
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+          hours:
+            type: integer
+          num_sections:
+            type: integer
+          category_id:
+            type: string
+
+    responses:
+      404:
+        description: course not found!
+      400:
+        description: Not a json
+      422:
+        description: validation error
+      200:
+        description: request executed successfully

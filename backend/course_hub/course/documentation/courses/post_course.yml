@@ -1,0 +1,40 @@
+    post a new course by instractor
+    ---
+    tags:
+      - Courses
+    parameters:
+      - name: instructor_id
+        in: path
+        type: string
+        required: true
+        description: The id of the instructor to retrieve
+
+      - name: course
+        in: body
+        required: true
+        requires:
+          - name:
+          - hours:
+          - num_sections:
+          - num_enrolled:
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+          hours:
+            type: integer
+          num_sections:
+            type: integer
+          num_enrolled:
+            type: integer
+          category_id:
+            type: string
+
+    responses:
+      400:
+        description: Not a json
+      422:
+        description: validation error
+      201:
+        description: successfully created course

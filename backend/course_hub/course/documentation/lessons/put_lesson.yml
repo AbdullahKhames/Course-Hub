@@ -1,0 +1,38 @@
+update lesson information
+---
+tags:
+  - Lessons
+parameters:
+  - name: lesson_id
+    in: path
+    type: string
+    required: true
+    description: The id of the lesson to retrieve
+
+  - name: lesson
+    in: body
+    required: true
+    requires:
+      - name:
+      - lesson_num:
+      - content:
+    properties:
+      name:
+        type: string
+      lesson_num:
+        type: integer
+      content:
+        type: string
+      section_id:
+        type: string
+        description: to change section of the lesson
+
+responses:
+  404:
+    description: lesson not found!
+  400:
+    description: Not a json
+  422:
+    description: validation error
+  200:
+    description: request executed successfully

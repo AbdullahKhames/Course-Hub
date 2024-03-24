@@ -1,0 +1,34 @@
+post a new lesson in section
+---
+tags:
+  - Lessons
+
+parameters:
+  - name: section_id
+    in: path
+    type: string
+    required: true
+    description: The id of the section to retrieve
+
+  - name: lesson
+    in: body
+    required: true
+    requires:
+      - name:
+      - lesson_num:
+      - content:
+    properties:
+      name:
+        type: string
+      lesson_num:
+        type: integer
+      content:
+        type: string
+
+responses:
+  400:
+    description: Not a json
+  422:
+    description: validation error
+  201:
+    description: successfully created lesson
