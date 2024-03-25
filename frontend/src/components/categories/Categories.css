@@ -1,0 +1,13 @@
+.head-link {
+    color: #0F0F0F;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0 1rem;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease-in-out;
+    max-width: fit-content !important;
+    &:hover {
+        color: #0174BE;
+    }
+}
