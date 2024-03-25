@@ -1,0 +1,89 @@
+/* CoursePage.css */
+
+.course-page {
+  padding: 20px;
+}
+
+.course-title {
+  font-size: 24px;
+  font-weight: bold;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.course-description {
+  margin-top: 12px;
+}
+
+.course-details {
+  margin-top: 8px;
+  text-align: left;
+}
+
+.instructor-card,
+.enroll-card {
+  margin-top: 20px;
+}
+
+/* Responsive styles */
+@media (max-width: 767px) {
+  .instructor-card,
+  .enroll-card {
+    margin-top: 20px;
+  }
+}
+
+.redirect {
+  margin-top: 20px;
+  text-align: center;
+  color: #0174be;
+  &:hover {
+    color: #0C356A;
+  }
+}
+
+.footer-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  flex-direction: row;
+  max-width: fit-content;
+}
+.icon-block {
+  display: inline-block;
+  width: 100px;
+  text-align: center;
+  margin: 0px auto;
+}
+
+.icon-text {
+  font-size: 16px;
+  padding-left: 5px;
+}
+
+.Language-icon {
+  display: inline-block;
+  background-image: url("/src/assets/images/lang.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 16px;
+  height: 16px;
+}
+
+.last-updated-icon {
+  display: inline-block;
+  background-image: url("/src/assets/images/update.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 16px;
+  height: 16px;
+}
+
+.infinity-icon {
+  display: inline-block;
+  background-image: url("/src/assets/images/infinity.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 16px;
+  height: 16px;
+}

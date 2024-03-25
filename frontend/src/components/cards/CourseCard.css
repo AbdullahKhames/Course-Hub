@@ -1,0 +1,82 @@
+.card-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    font-weight: 500;
+    width: 100%;
+    height: 5.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.link-style {
+    text-decoration: none;
+    color: #0174BE;
+}
+
+.btn-outline-success {
+    --bs-btn-hover-color: #fff;
+    --bs-btn-focus-shadow-rgb: 25,135,84;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-bg: transparent;
+    --bs-gradient: none;
+}
+
+.mr {
+    margin-right: 5px;
+}
+
+.mb {
+    margin-bottom: 3px;
+}
+
+.basic {
+    --bs-btn-border-color: #0174BE !important;
+    --bs-btn-color: #0174BE !important;
+    --bs-btn-hover-bg: #0174BE !important;
+    --bs-btn-hover-border-color: #0174BE !important;
+    --bs-btn-active-bg: #0174BE !important;
+    --bs-btn-active-border-color: #0174BE !important;
+    --bs-btn-disabled-color: #0174BE !important;
+    --bs-btn-disabled-border-color: #0174BE !important;
+}
+
+.delete {
+    --bs-btn-border-color: #dc3545 !important;
+    --bs-btn-color: #dc3545 !important;
+    --bs-btn-hover-bg: #dc3545 !important;
+    --bs-btn-hover-border-color: #dc3545 !important;
+    --bs-btn-active-bg: #dc3545 !important;
+    --bs-btn-active-border-color: #dc3545 !important;
+    --bs-btn-disabled-color: #dc3545 !important;
+    --bs-btn-disabled-border-color: #dc3545 !important;
+}
+
+.approved {
+    --bs-btn-border-color: #27ae60 !important;
+    --bs-btn-color: #27ae60 !important;
+    --bs-btn-hover-bg: #27ae60 !important;
+    --bs-btn-hover-border-color: #27ae60 !important;
+    --bs-btn-active-bg: #27ae60 !important;
+    --bs-btn-active-border-color: #27ae60 !important;
+    --bs-btn-disabled-color: #27ae60 !important;
+    --bs-btn-disabled-border-color: #27ae60 !important;
+}
+
+.edit {
+    --bs-btn-border-color: #51585e !important;
+    --bs-btn-color: #51585e !important;
+    --bs-btn-hover-bg: #51585e !important;
+    --bs-btn-hover-border-color: #51585e !important;
+    --bs-btn-active-bg: #51585e !important;
+    --bs-btn-active-border-color: #51585e !important;
+    --bs-btn-disabled-color: #51585e !important;
+    --bs-btn-disabled-border-color: #51585e !important;
+}
+
+.card-img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
