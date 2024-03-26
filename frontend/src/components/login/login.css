@@ -1,0 +1,27 @@
+/* .rem-checkbox{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 15px;
+} */
+.rem-checkbox {
+    position: relative;
+    padding: 12px 0px;
+    margin: 12px 0px;
+}
+
+#remember-label {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#remember {
+    width: 250px;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
