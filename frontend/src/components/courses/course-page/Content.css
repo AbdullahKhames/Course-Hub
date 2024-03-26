@@ -1,0 +1,66 @@
+/* CourseDetails.css */
+
+.section-head {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  color: #333;
+
+}
+
+.toggle-icon {
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.point-icon {
+  font-size: 32px;
+  margin-right: 6px;
+}
+
+.lesson-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.lesson-content {
+  margin-left: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.list-content {
+    list-style: none;
+}
+
+.list-sections {
+    padding-left: 16px;
+}
+
+/* MyAlert.css */
+
+.my-alert {
+    position: relative;
+  }
+  
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.75rem 1.25rem;
+    background-color: transparent;
+    border: 0;
+  }
+  
+  .close:hover {
+    background-color: transparent;
+  }
+  
+  .close-icon {
+    font-size: 1.5rem;
+    color: #664d03; /* Adjust the color as needed */
+  }
+  
