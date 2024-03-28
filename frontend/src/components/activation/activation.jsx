@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
-import "./login.css";
+import "./activation.css";
 import * as yup from "yup";
 import config from "../config";
 import { UserDataContext } from "../UserContextProvider/UserContextProvider";
@@ -9,7 +9,7 @@ import api from "../api";
 import { useLocation } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
-export default function Login() {
+export default function Activation() {
   const userContext = useContext(UserDataContext);
 
   const location = useLocation();
@@ -20,19 +20,10 @@ export default function Login() {
   async function handleLogin(values) {
     try {
       setisLoading(true);
-      let response = await api.post(`${config.auth}/login`, values);
+      let response = await api.post(`${config.auth}/activate`, values);
       if (response.status === 200) {
-        localStorage.setItem("access_token", response.data.data.access_token);
-        localStorage.setItem("refresh_token", response.data.data.refresh_token);
-        await handleSaveUserData(response);
         setisLoading(false);
-        if (response.data.data.role === 1) {
-          nav("/Instructor");
-        } else if (response.data.data.role === 0) {
-          nav("/admin");
-        } else {
-          nav("/");
-        }
+        nav('/login')
       } else {
         setisLoading(false);
       }
@@ -43,29 +34,16 @@ export default function Login() {
     setisLoading(false);
   }
 
-  const handleSaveUserData = async (response) => {
-    await userContext.saveUserData({
-      name: response.data.data.name,
-      role: response.data.data.role,
-      id: response.data.data.id,
-      email: response.data.data.email,
-    });
-  };
   const validShceme = yup.object({
     email: yup.string().email().required(),
-    password: yup
+    activation_token: yup
       .string()
-      .required()
-      .matches(
-        "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$",
-        "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number"
-      ),
-    remember: yup.boolean(),
+      .required(),
   });
   let formik = useFormik({
     initialValues: {
       email: "",
-      password: "",
+      activation_token: "",
     },
     validationSchema: validShceme,
     onSubmit: handleLogin,
@@ -101,18 +79,18 @@ export default function Login() {
             <div className="alert alert-danger">{formik.errors.email}</div>
           ) : null}
 
-          <label htmlFor="password">Password :</label>
+          <label htmlFor="activation_token">activation_token :</label>
           <input
-            type="password"
-            name="password"
-            id="password"
-            value={formik.values.password}
+            type="text"
+            name="activation_token"
+            id="activation_token"
+            value={formik.values.activation_token}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             required
           />
-          {formik.errors.password && formik.touched.password ? (
-            <div className="alert alert-danger">{formik.errors.password}</div>
+          {formik.errors.activation_token && formik.touched.activation_token ? (
+            <div className="alert alert-danger">{formik.errors.activation_token}</div>
           ) : null}
 
           <p></p>
@@ -127,7 +105,7 @@ export default function Login() {
               type="submit"
               onSubmit={handleLogin}
             >
-              Login
+              Activate Now
             </button>
           )}
         </form>
@@ -135,7 +113,7 @@ export default function Login() {
           dont Have An Account ?<Link to="/register"> Register Here</Link>
         </div>
         <div className="container">
-          want to activate your email?<Link to="/activate"> Activate Here</Link>
+          Already Have An Account? <Link to="/login">Login Here</Link>
         </div>
         <Toaster />
       </div>

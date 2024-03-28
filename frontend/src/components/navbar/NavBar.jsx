@@ -145,6 +145,11 @@ export default function NavBar(props) {
                       Login
                     </Link>
                   </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/activate">
+                      Activate
+                    </Link>
+                  </li>
                 </>
               ) : (
                 <>
