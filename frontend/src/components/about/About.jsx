@@ -73,7 +73,7 @@ function About() {
                 <Button
                   className="basic-p about-button"
                   variant="primary"
-                  onClick={() => handleContact("abdallahyouniiss@gmail.com")}
+                  onClick={() => handleContact("5miiss96@gmail.com")}
                 >
                   Contact
                 </Button>
@@ -81,7 +81,7 @@ function About() {
             </div>
           </div>
         </div>
-        <div className="about-column">
+        {/* <div className="about-column"> 
           <div className="about-card">
             <img
               src="./users/Mohammed.jpg"
@@ -105,7 +105,7 @@ function About() {
               </p>
             </div>
           </div>
-        </div>
+        </div>*/}
       </div>
     </>
   );

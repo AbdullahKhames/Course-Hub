@@ -39,7 +39,7 @@ export default function Footer() {
                   </div>
                 </div>            
             </div>
-            <p className="copyright">Course Hub @2023</p>
+            <p className="copyright">Course Hub @2024</p>
         </div>
     </footer>
   </div>
