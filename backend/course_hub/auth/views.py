@@ -12,7 +12,7 @@ from models.instructor import Instructor
 from models.admin import Admin
 from flasgger.utils import swag_from
 from bcrypt import checkpw
-from .schemas import SignUpSchema, SignInSchema
+from .schemas import ActivationSchema, SignUpSchema, SignInSchema
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
@@ -21,6 +21,8 @@ from flask_jwt_extended import (
     current_user,
 )
 from utils.auth_utils import user_required
+from course_hub import mail
+from flask_mail import Message
 
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
@@ -43,10 +45,46 @@ def sign_up():
     role = roles[new_user.role](**new_data)
     if new_user.role == 2:
         role.interested = data.get('interestedIn')
+    if new_user.role != 0:
+        msg = Message('Welcome To Course Hub WebSite', sender = 'techiocean.tech', recipients = [new_user.email])
+        msg.body = f"hello there Welcome To Course Hub WebSite here is your activation code {new_user.activation_token}"
+        mail.send(msg)
     role.save()
     return jsonify({
-        'message': 'success',
+        'message': 'user registered successfully please activate via activation_token from email',
         'data': f'{new_user.id}'}), 201
+
+
+@auth_views.route('/activate', methods=['POST'])
+@swag_from(os.path.join(current_directory, 'documentation/auth/activate.yml'))
+def activate():
+    data = request.get_json()
+    try:
+        activation = ActivationSchema().load(data)
+    except ValidationError as e:
+        return jsonify({"validation_error": e.messages}), 422
+    
+    user = storage.getUserByEmail(activation.get('email'))
+    if not user:
+        return jsonify({
+            'message': 'fail',
+            'data': None,
+            'error': 'incorrect email'}),400
+    if user.enabled:
+        return jsonify({
+            'message': 'fail',
+            'data': None,
+            'error': 'user is already active'}),400
+    if user.activation_token != activation.get('activation_token'):
+        return jsonify({
+            'message': 'fail',
+            'data': None,
+            'error': 'incorrect activation_token'}),400
+    user.enabled = True
+    user.save()
+    return jsonify({
+        'message': 'user has been successfully activated',
+        'data': f'{user.id}'}), 200
 
 
 @auth_views.post("/refresh")
@@ -93,7 +131,7 @@ def login():
     email = data.get('email')
     password = data.get('password')
     user = storage.getUserByEmail(email)
-    if user:
+    if user and user.enabled:
         userBytes = password.encode('utf-8')
         hashed_password_bytes = user.password.encode('utf-8')
         if checkpw(userBytes, hashed_password_bytes):
@@ -116,6 +154,11 @@ def login():
             'message': 'fail',
             'data': None,
             'error': 'incorrect email or password'}),400
+    elif user.enabled == False:
+        return jsonify({
+            'message': 'fail',
+            'data': "you must first activate the account find activation in code in your inbox email",
+            'error': 'not activated'}),400
     else:
         return jsonify({
             'message': 'fail',

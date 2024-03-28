@@ -53,3 +53,10 @@ class SignInSchema(Schema):
         unknown = INCLUDE
     email = fields.Email(required=True)
     password = fields.String(required=True)
+
+
+class ActivationSchema(Schema):
+    class Meta:
+        unknown = INCLUDE
+    email = fields.Email(required=True)
+    activation_token = fields.String(required=True)
