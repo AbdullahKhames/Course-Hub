@@ -9,12 +9,43 @@ import { useLocation } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function Activation() {
-
   const location = useLocation();
   const [isLoading, setisLoading] = useState(false);
   const [errorMessage, seterrorMessage] = useState("");
   const [popupData, setPopupData] = useState(null);
   const nav = useNavigate();
+
+  const validScheme = yup.object({
+    email: yup.string().email().required(),
+    activation_token: yup.string().required(),
+  });
+
+  const activationFormik = useFormik({
+    initialValues: {
+      email: "",
+      activation_token: "",
+    },
+    validationSchema: validScheme,
+    onSubmit: handleLogin,
+  });
+
+  const requestActivationFormik = useFormik({
+    initialValues: {
+      email: "",
+    },
+    validationSchema: yup.object({
+      email: yup.string().email().required(),
+    }),
+    onSubmit: (values) => handleRequestActivation(values.email),
+  });
+
+  useEffect(() => {
+    if (location.state && location.state.error) {
+      toast.error(location.state.error, {
+        duration: 5000,
+      });
+    }
+  }, []);
 
   async function handleLogin(values) {
     try {
@@ -23,15 +54,9 @@ export default function Activation() {
       if (response.status === 200) {
         setisLoading(false);
         toast.success(response.data.message);
-        if(response.data?.data){
-          // setadminToken(response.data.data);
-          setPopupData(response.data.data)
-        }
-        else{
-          setTimeout(() => {
-            nav('/login');
-          }, 2000);
-        }
+        setTimeout(() => {
+          nav("/login");
+        }, 2000);
       } else {
         setisLoading(false);
       }
@@ -45,9 +70,12 @@ export default function Activation() {
     try {
       setisLoading(true);
       let response = await api.post(`${config.auth}/request-activation-token`, { email });
-      if (response.status === 200) {
+      if (response.status === 201) {
         setisLoading(false);
         toast.success(response.data.message);
+        if (response.data?.data) {
+          setPopupData(response.data.data);
+        }
       } else {
         setisLoading(false);
       }
@@ -57,28 +85,6 @@ export default function Activation() {
     }
   }
 
-  const validShceme = yup.object({
-    email: yup.string().email().required(),
-    activation_token: yup.string().required(),
-  });
-
-  let formik = useFormik({
-    initialValues: {
-      email: "",
-      activation_token: "",
-    },
-    validationSchema: validShceme,
-    onSubmit: handleLogin,
-  });
-
-  useEffect(() => {
-    if (location.state && location.state.error) {
-      toast.error(location.state.error, {
-        duration: 5000,
-      });
-    }
-  }, []);
-
   return (
     <>
       <div className="registration-container">
@@ -87,30 +93,33 @@ export default function Activation() {
           <div className="alert alert-danger">{errorMessage}</div>
         ) : null}
         {popupData && (
-        <div className="popup">
-          <div className="popup-inner">
-            <h2>Data Received</h2>
-            <p>{popupData}</p>
-            <button onClick={() => {
-              setPopupData(null);
-              nav('/login')
-              }}>Close</button>
+          <div className="popup">
+            <div className="popup-inner">
+              <h2>Data Received</h2>
+              <p>{popupData}</p>
+              <button
+                onClick={() => {
+                  setPopupData(null);
+                }}
+              >
+                Close
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-        <form onSubmit={formik.handleSubmit}>
+        )}
+        <form onSubmit={activationFormik.handleSubmit}>
           <label htmlFor="email">Email :</label>
           <input
             type="email"
             name="email"
             id="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
+            value={activationFormik.values.email}
+            onChange={activationFormik.handleChange}
+            onBlur={activationFormik.handleBlur}
             required
           />
-          {formik.errors.email && formik.touched.email ? (
-            <div className="alert alert-danger">{formik.errors.email}</div>
+          {activationFormik.errors.email && activationFormik.touched.email ? (
+            <div className="alert alert-danger">{activationFormik.errors.email}</div>
           ) : null}
 
           <label htmlFor="activation_token">Activation Token :</label>
@@ -118,13 +127,13 @@ export default function Activation() {
             type="text"
             name="activation_token"
             id="activation_token"
-            value={formik.values.activation_token}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
+            value={activationFormik.values.activation_token}
+            onChange={activationFormik.handleChange}
+            onBlur={activationFormik.handleBlur}
             required
           />
-          {formik.errors.activation_token && formik.touched.activation_token ? (
-            <div className="alert alert-danger">{formik.errors.activation_token}</div>
+          {activationFormik.errors.activation_token && activationFormik.touched.activation_token ? (
+            <div className="alert alert-danger">{activationFormik.errors.activation_token}</div>
           ) : null}
 
           <p></p>
@@ -135,27 +144,48 @@ export default function Activation() {
           ) : (
             <button
               className="register-button"
-              disabled={!formik.dirty && formik.isValid}
+              disabled={!activationFormik.dirty && activationFormik.isValid}
               type="submit"
-              onSubmit={handleLogin}
             >
               Activate Now
             </button>
-            
           )}
-          Didn't receive activation token ?
-          <button
-            type="button"
-            className="register-button"
-            onClick={() => handleRequestActivation(formik.values.email)}
-            disabled={isLoading}
-          >
-           Request activation token now
-        </button>
-        <Toaster />
         </form>
 
+        <form onSubmit={requestActivationFormik.handleSubmit}>
+          <p>Didn't recive activation token ?</p>
+          <label htmlFor="email">Email :</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            value={requestActivationFormik.values.email}
+            onChange={requestActivationFormik.handleChange}
+            onBlur={requestActivationFormik.handleBlur}
+            required
+          />
+          {requestActivationFormik.errors.email && requestActivationFormik.touched.email ? (
+            <div className="alert alert-danger">{requestActivationFormik.errors.email}</div>
+          ) : null}
 
+          <p></p>
+          {isLoading ? (
+            <button type="button" className="register-button">
+              <i className="fas fa-spinner fa-spin"></i>
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="register-button"
+              onClick={requestActivationFormik.handleSubmit}
+              disabled={isLoading}
+            >
+              Request activation token now
+            </button>
+          )}
+        </form>
+
+        <Toaster />
         <div className="container">
           Don't Have An Account? <Link to="/register">Register Here</Link>
         </div>
