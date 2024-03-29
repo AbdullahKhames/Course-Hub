@@ -13,6 +13,7 @@ export default function Activation() {
   const location = useLocation();
   const [isLoading, setisLoading] = useState(false);
   const [errorMessage, seterrorMessage] = useState("");
+  const [popupData, setPopupData] = useState(null);
   const nav = useNavigate();
 
   async function handleLogin(values) {
@@ -22,10 +23,15 @@ export default function Activation() {
       if (response.status === 200) {
         setisLoading(false);
         toast.success(response.data.message);
-        setTimeout(() => {
-        toast.success(response.data.message);
-          nav('/login');
-        }, 2000);
+        if(response.data?.data){
+          // setadminToken(response.data.data);
+          setPopupData(response.data.data)
+        }
+        else{
+          setTimeout(() => {
+            nav('/login');
+          }, 2000);
+        }
       } else {
         setisLoading(false);
       }
@@ -33,15 +39,29 @@ export default function Activation() {
       setisLoading(false);
       seterrorMessage(`${JSON.stringify(error.response.data.error)}`);
     }
-    setisLoading(false);
+  }
+
+  async function handleRequestActivation(email) {
+    try {
+      setisLoading(true);
+      let response = await api.post(`${config.auth}/request-activation-token`, { email });
+      if (response.status === 200) {
+        setisLoading(false);
+        toast.success(response.data.message);
+      } else {
+        setisLoading(false);
+      }
+    } catch (error) {
+      setisLoading(false);
+      seterrorMessage(`${JSON.stringify(error.response.data.error)}`);
+    }
   }
 
   const validShceme = yup.object({
     email: yup.string().email().required(),
-    activation_token: yup
-      .string()
-      .required(),
+    activation_token: yup.string().required(),
   });
+
   let formik = useFormik({
     initialValues: {
       email: "",
@@ -62,10 +82,22 @@ export default function Activation() {
   return (
     <>
       <div className="registration-container">
-        <h3>Login Now</h3>
+        <h3>Activate Now</h3>
         {errorMessage.length > 0 ? (
           <div className="alert alert-danger">{errorMessage}</div>
         ) : null}
+        {popupData && (
+        <div className="popup">
+          <div className="popup-inner">
+            <h2>Data Received</h2>
+            <p>{popupData}</p>
+            <button onClick={() => {
+              setPopupData(null);
+              nav('/login')
+              }}>Close</button>
+          </div>
+        </div>
+      )}
         <form onSubmit={formik.handleSubmit}>
           <label htmlFor="email">Email :</label>
           <input
@@ -109,11 +141,23 @@ export default function Activation() {
             >
               Activate Now
             </button>
+            
           )}
+          Didn't receive activation token ?
+          <button
+            type="button"
+            className="register-button"
+            onClick={() => handleRequestActivation(formik.values.email)}
+            disabled={isLoading}
+          >
+           Request activation token now
+        </button>
         <Toaster />
         </form>
+
+
         <div className="container">
-          dont Have An Account ?<Link to="/register"> Register Here</Link>
+          Don't Have An Account? <Link to="/register">Register Here</Link>
         </div>
         <div className="container">
           Already Have An Account? <Link to="/login">Login Here</Link>
