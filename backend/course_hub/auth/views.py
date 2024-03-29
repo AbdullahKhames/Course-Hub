@@ -89,7 +89,7 @@ def forgot_password():
         return jsonify({
             'message': 'fail',
             'data': None,
-            'error': 'incorrect email or password'}),400
+            'error': 'incorrect email'}),400
     if user.role == 0:
         user.reset_token = str(uuid4())
         user.save()
@@ -121,18 +121,18 @@ def reset_password():
         activation = ResetPasswordSchema().load(data)
     except ValidationError as e:
         return jsonify({"validation_error": e.messages}), 422
-    
-    user = storage.getUserByResetToken(activation.get('reset_token'))
+    email = activation.get('email')
+    user = storage.getUserByEmail(email)
     if not user:
         return jsonify({
             'message': 'fail',
             'data': None,
-            'error': 'no user found'}),400
-    if user.email != activation.get('email'):
+            'error': f'no user found with given email {email}'}),400
+    if user.reset_token != activation.get('reset_token'):
         return jsonify({
             'message': 'fail',
             'data': None,
-            'error': 'email is not found'}),400
+            'error': 'reset token is not valid please check latest email'}),400
     if user and user.enabled == False:
         return jsonify({
             'message': 'fail',
