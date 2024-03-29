@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
-import "./activation.css";
+import "./ForgotPassword.css";
 import * as yup from "yup";
-import config from "../config";
-import api from "../api";
+import config from "../../config";
+import api from "../../api";
 import { useLocation } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
-export default function Activation() {
+export default function ForgotPassword() {
 
   const location = useLocation();
   const [isLoading, setisLoading] = useState(false);
@@ -18,13 +18,12 @@ export default function Activation() {
   async function handleLogin(values) {
     try {
       setisLoading(true);
-      let response = await api.post(`${config.auth}/activate`, values);
-      if (response.status === 200) {
+      let response = await api.post(`${config.auth}/forgot-password`, values);
+      if (response.status === 201) {
         setisLoading(false);
         toast.success(response.data.message);
         setTimeout(() => {
-        toast.success(response.data.message);
-          nav('/login');
+          nav('/reset-password');
         }, 2000);
       } else {
         setisLoading(false);
@@ -33,19 +32,14 @@ export default function Activation() {
       setisLoading(false);
       seterrorMessage(`${JSON.stringify(error.response.data.error)}`);
     }
-    setisLoading(false);
   }
 
   const validShceme = yup.object({
     email: yup.string().email().required(),
-    activation_token: yup
-      .string()
-      .required(),
   });
   let formik = useFormik({
     initialValues: {
       email: "",
-      activation_token: "",
     },
     validationSchema: validShceme,
     onSubmit: handleLogin,
@@ -62,7 +56,7 @@ export default function Activation() {
   return (
     <>
       <div className="registration-container">
-        <h3>Login Now</h3>
+        <h3>Forget Password</h3>
         {errorMessage.length > 0 ? (
           <div className="alert alert-danger">{errorMessage}</div>
         ) : null}
@@ -81,20 +75,6 @@ export default function Activation() {
             <div className="alert alert-danger">{formik.errors.email}</div>
           ) : null}
 
-          <label htmlFor="activation_token">Activation Token :</label>
-          <input
-            type="text"
-            name="activation_token"
-            id="activation_token"
-            value={formik.values.activation_token}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            required
-          />
-          {formik.errors.activation_token && formik.touched.activation_token ? (
-            <div className="alert alert-danger">{formik.errors.activation_token}</div>
-          ) : null}
-
           <p></p>
           {isLoading ? (
             <button type="button" className="register-button">
@@ -107,17 +87,17 @@ export default function Activation() {
               type="submit"
               onSubmit={handleLogin}
             >
-              Activate Now
+              Request Reset Password Token
             </button>
           )}
-        <Toaster />
         </form>
-        <div className="container">
+        {/* <div className="container">
           dont Have An Account ?<Link to="/register"> Register Here</Link>
         </div>
         <div className="container">
           Already Have An Account? <Link to="/login">Login Here</Link>
-        </div>
+        </div> */}
+        <Toaster />
       </div>
     </>
   );

@@ -32,9 +32,7 @@ app = Flask(__name__, instance_relative_config=True)
 # app.config['MAIL_USE_SSL'] = False
 
 mail = Mail(app)
-
-client = MailtrapClient(token=environ.get("MAIL_TRAP_TOKEN"))
-
+client = MailtrapClient(token=environ.get('MAIL_TRAP_TOKEN'))
 app.config.from_object('config.default')
 
 app.config.from_pyfile('config.py')

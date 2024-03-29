@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """new view for State objects that handles all default RESTFul API actions"""
+from uuid import uuid4
 from marshmallow import ValidationError
 
 import os
@@ -12,7 +13,7 @@ from models.instructor import Instructor
 from models.admin import Admin
 from flasgger.utils import swag_from
 from bcrypt import checkpw
-from .schemas import ActivationSchema, SignUpSchema, SignInSchema
+from .schemas import ActivationSchema, ResetPasswordSchema, SignUpSchema, SignInSchema
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
@@ -51,19 +52,103 @@ def sign_up():
     if new_user.role != 0:
         # msg = Message('Welcome To Course Hub WebSite', sender = 'admin@techiocean.tech', recipients = [new_user.email])
         # msg.html = generate_html_email(new_user.name, new_user.activation_token)
-        # mail.send(msg)    
+        # mail.send(msg)  
+        html_message = '<p>Welcome to Course Hub Website.</p>\n<p>Here is your activation code:</p>'
         mail = Mail(
-            sender=Address(email="admin@techiocean.tech", name="ACtivation Code"),
-            to=[Address(email="5miiss96@gmail.com")],
+            sender=Address(email="admin@techiocean.tech", name="techiocean.tech"),
+            to=[Address(email=new_user.email)],
             subject="Welcome To Course Hub WebSite",
-            text="Congrats for sending test email with Mailtrap!",
-            html=generate_html_email(new_user.name, new_user.activation_token)
+            text="Welcome To Course Hub WebSite",
+            html=generate_html_email(html_message, new_user.name, new_user.activation_token)
         )
         client.send(mail=mail)
     role.save()
     return jsonify({
         'message': 'user registered successfully please activate via activation_token from email',
         'data': f'{new_user.id}'}), 201
+
+
+@auth_views.route('/forgot-password', methods=['POST'])
+@swag_from(os.path.join(current_directory, 'documentation/auth/forgot_password.yml'))
+def forgot_password():
+    """forgot password"""
+    json_data = request.get_json()
+    if not json_data:
+        return {"message": "Must provide email"}, 400
+    try:
+        email = json_data['email']
+    except KeyError as err:
+        return {"message": "Must provide email"}, 422
+    user = storage.getUserByEmail(email)
+    if user and user.enabled == False:
+        return jsonify({
+            'message': 'fail',
+            'data': "you must first activate the account find activation in code in your inbox email",
+            'error': 'not activated'}),400
+    if not user:
+        return jsonify({
+            'message': 'fail',
+            'data': None,
+            'error': 'incorrect email'}),400
+    if user.role == 0:
+        user.reset_token = str(uuid4())
+        user.save()
+        return jsonify({
+        'message': 'here is the reset token please reset your password',
+        'data': f'{user.reset_token}'}), 201
+
+    user.reset_token = str(uuid4())
+    user.save()
+    html_message = '<p>Sorry to hear you lost your password</p>\n<p>Here is your reset password token:</p>'
+    mail = Mail(
+        sender=Address(email="admin@techiocean.tech", name="techiocean.tech"),
+        to=[Address(email=user.email)],
+        subject="Reset Password Code",
+        text="Reset Password Code",
+        html=generate_html_email(html_message, user.name, user.reset_token)
+    )
+    client.send(mail=mail)
+    return jsonify({
+    'message': 'please check your email for reset token',
+    'data': None}), 201
+
+
+@auth_views.route('/reset-password', methods=['POST'])
+@swag_from(os.path.join(current_directory, 'documentation/auth/reset_password.yml'))
+def reset_password():
+    data = request.get_json()
+    try:
+        activation = ResetPasswordSchema().load(data)
+    except ValidationError as e:
+        return jsonify({"validation_error": e.messages}), 422
+    email = activation.get('email')
+    user = storage.getUserByEmail(email)
+    if not user:
+        return jsonify({
+            'message': 'fail',
+            'data': None,
+            'error': f'no user found with given email {email}'}),400
+    if user.reset_token != activation.get('reset_token'):
+        return jsonify({
+            'message': 'fail',
+            'data': None,
+            'error': 'reset token is not valid please check latest email'}),400
+    if user and user.enabled == False:
+        return jsonify({
+            'message': 'fail',
+            'data': "you must first activate the account find activation in code in your inbox email",
+            'error': 'not activated'}),400
+    if user.reset_token != activation.get('reset_token'):
+        return jsonify({
+            'message': 'fail',
+            'data': None,
+            'error': 'incorrect reset_token'}),400
+    user.password = activation.get('password')
+    user.reset_token = None
+    user.save()
+    return jsonify({
+        'message': 'password has been successfully updated',
+        'data': f'{user.id}'}), 200
 
 
 @auth_views.route('/activate', methods=['POST'])
@@ -223,7 +308,7 @@ def role_data(data):
     return new_data
 
 
-def generate_html_email(name, activation_code):
+def generate_html_email(html_message, name, activation_code):
     html_content = f"""
     <!DOCTYPE html>
     <html lang="en">
@@ -266,8 +351,7 @@ def generate_html_email(name, activation_code):
     <body>
       <div class="container">
         <h1>Hello there {name}!</h1>
-        <p>Welcome to Course Hub Website.</p>
-        <p>Here is your activation code:</p>
+        {html_message}
         <p class="activation-code">{activation_code}</p>
       </div>
     </body>

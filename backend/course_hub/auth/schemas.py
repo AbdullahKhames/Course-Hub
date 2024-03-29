@@ -60,3 +60,19 @@ class ActivationSchema(Schema):
         unknown = INCLUDE
     email = fields.Email(required=True)
     activation_token = fields.String(required=True)
+
+class ResetPasswordSchema(Schema):
+    class Meta:
+        unknown = INCLUDE
+    email = fields.Email(required=True)
+    reset_token = fields.String(required=True)
+    password = fields.String(required=True)
+    confirmPassword = fields.String(required=True)
+    @validates('password')
+    def validate_password(self, value):
+        if len(value) < 6:
+            raise ValidationError("Password cannot be less than 6 characters")
+    @validates_schema
+    def validate_confirm_password(self, data, **kwargs):
+        if data.get('confirmPassword') != data.get('password'):
+            raise ValidationError('Passwords do not match.')

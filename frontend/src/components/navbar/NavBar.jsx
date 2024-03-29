@@ -141,13 +141,23 @@ export default function NavBar(props) {
                     </Link>
                   </li>
                   <li className="nav-item">
+                    <Link className="nav-link" to="/activate">
+                      Activate
+                    </Link>
+                  </li>
+                  <li className="nav-item">
                     <Link className="nav-link" to="/login">
                       Login
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/activate">
-                      Activate
+                    <Link className="nav-link" to="/forget-password">
+                      Forget Password
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/reset-password">
+                      Reset Password
                     </Link>
                   </li>
                 </>

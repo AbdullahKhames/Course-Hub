@@ -100,6 +100,13 @@ class DBStorage:
         else:
             return None
 
+    def getUserByResetToken(self, reset_token):
+        """A method to retrieve one object by its id"""
+        if reset_token is not None:
+            return self.__session.query(User).filter(User.reset_token == str(reset_token)).first()
+        else:
+            return None
+
     def getUserById(self, id):
         """A method to retrieve one object by its id"""
         if id is not None:
