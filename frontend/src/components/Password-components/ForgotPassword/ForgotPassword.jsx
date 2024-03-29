@@ -13,6 +13,8 @@ export default function ForgotPassword() {
   const location = useLocation();
   const [isLoading, setisLoading] = useState(false);
   const [errorMessage, seterrorMessage] = useState("");
+  // const [adminToken, setadminToken] = useState("");
+  const [popupData, setPopupData] = useState(null);
   const nav = useNavigate();
 
   async function handleLogin(values) {
@@ -22,9 +24,15 @@ export default function ForgotPassword() {
       if (response.status === 201) {
         setisLoading(false);
         toast.success(response.data.message);
-        setTimeout(() => {
-          nav('/reset-password');
-        }, 2000);
+        if(response.data?.data){
+          // setadminToken(response.data.data);
+          setPopupData(response.data.data)
+        }
+        else{
+          setTimeout(() => {
+            nav('/reset-password');
+          }, 2000);
+        }
       } else {
         setisLoading(false);
       }
@@ -60,6 +68,21 @@ export default function ForgotPassword() {
         {errorMessage.length > 0 ? (
           <div className="alert alert-danger">{errorMessage}</div>
         ) : null}
+        {/* {adminToken.length > 0 ? (
+          <div className="alert alert-danger">{adminToken}</div>
+        ) : null} */}
+        {popupData && (
+        <div className="popup">
+          <div className="popup-inner">
+            <h2>Data Received</h2>
+            <p>{popupData}</p>
+            <button onClick={() => {
+              setPopupData(null);
+              nav('/reset-password')
+              }}>Close</button>
+          </div>
+        </div>
+      )}
         <form onSubmit={formik.handleSubmit}>
           <label htmlFor="email">Email :</label>
           <input
