@@ -6,6 +6,7 @@ import Home from './components/home/Home';
 import About from './components/about/About';
 import ContacUs from './components/contact-us/ContactUs';
 import Login from './components/login/Login';
+import Activation from './components/activation/activation';
 import Logout from './components/logout/Logout';
 import Register from './components/register/Register';
 import Courses from './components/courses/Courses'
@@ -52,6 +53,7 @@ function App() {
         { path: "about", element: <About /> },
         { path: "contact-us", element: <ContacUs /> },
         { path: "login", element: <Login /> },
+        { path: "activate", element: <Activation /> },
 
         {
           path: "logout",

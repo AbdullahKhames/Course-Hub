@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 """ holds class User"""
+from uuid import uuid4
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, Boolean
 from flask_login import UserMixin
 from bcrypt import hashpw, gensalt
 
@@ -11,6 +12,9 @@ class User(BaseModel, Base, UserMixin):
     __tablename__ = 'users'
     email = Column(String(45), nullable=False, unique=True)
     password = Column(String(100), nullable=False)
+    enabled = Column(Boolean(), default=False)
+    activation_token = Column(String(60), nullable=True, default=str(uuid4()))
+    reset_token = Column(String(60), nullable=True)
     name = Column(String(150), nullable=True)
     age = Column(Integer(), nullable=True)
     role = Column(Integer, nullable=False) # 0 for admin, 1 for instructor, 2 for student

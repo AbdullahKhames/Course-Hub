@@ -19,7 +19,7 @@ function Register() {
       let response = await api.post(`${config.auth}/sign-up`, values);
       if (response.status === 201) {
         setisLoading(false);
-        nav('/login');
+        nav('/activate');
       } else {
         setisLoading(false);
       }
@@ -222,6 +222,9 @@ function Register() {
         </form>
         <div className="container">
           Already Have An Account? <Link to="/login">Login Here</Link>
+        </div>
+        <div className="container">
+          want to activate your email?<Link to="/activate"> Activate Here</Link>
         </div>
       </div>
     </>
