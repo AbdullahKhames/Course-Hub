@@ -47,7 +47,7 @@ def sign_up():
         role.interested = data.get('interestedIn')
     if new_user.role != 0:
         msg = Message('Welcome To Course Hub WebSite', sender = 'techiocean.tech', recipients = [new_user.email])
-        msg.body = f"hello there Welcome To Course Hub WebSite here is your activation code {new_user.activation_token}"
+        msg.body = generate_html_email(new_user.activation_token)
         mail.send(msg)
     role.save()
     return jsonify({
@@ -154,7 +154,7 @@ def login():
             'message': 'fail',
             'data': None,
             'error': 'incorrect email or password'}),400
-    elif user.enabled == False:
+    elif user and user.enabled == False:
         return jsonify({
             'message': 'fail',
             'data': "you must first activate the account find activation in code in your inbox email",
@@ -188,3 +188,56 @@ def role_data(data):
             new_data[k] = v
 
     return new_data
+
+
+def generate_html_email(activation_code):
+    html_content = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Course Hub</title>
+    <style>
+      body {{
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+      }}
+      .container {{
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }}
+      h1 {{
+        color: #333;
+        text-align: center;
+      }}
+      p {{
+        color: #666;
+        line-height: 1.6;
+      }}
+      .activation-code {{
+        text-align: center;
+        font-size: 20px;
+        color: #007bff;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }}
+    </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>Hello there!</h1>
+        <p>Welcome to Course Hub Website.</p>
+        <p>Here is your activation code:</p>
+        <p class="activation-code">{activation_code}</p>
+      </div>
+    </body>
+    </html>
+    """
+    return html_content
