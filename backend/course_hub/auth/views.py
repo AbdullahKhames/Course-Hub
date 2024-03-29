@@ -41,6 +41,8 @@ def sign_up():
         new_user = SignUpSchema().load(data)
     except ValidationError as e:
         return jsonify({"validation_error": e.messages}), 422
+    if new_user.role == 0:
+        new_user.enabled = True
     new_user.save()
     new_data = role_data(data)
     new_data['id'] = new_user.id
@@ -180,6 +182,28 @@ def activate():
         'message': 'user has been successfully activated',
         'data': f'{user.id}'}), 200
 
+
+@auth_views.route('/craete_admin', methods=['POST'])
+@swag_from(os.path.join(current_directory, 'documentation/auth/craete_admin.yml'))
+@jwt_required()
+@user_required(allowed_roles={0})
+def craete_admin():
+    """method used to create a new admin user"""
+    data = request.get_json()
+    try:
+        new_user = SignUpSchema().load(data)
+    except ValidationError as e:
+        return jsonify({"validation_error": e.messages}), 422
+    new_user.role = 0
+    new_user.enabled = True
+    new_user.save()
+    admin = Admin()
+    admin.user = new_user
+    admin.id = new_user.id
+    admin.save()
+    return jsonify({
+        'message': 'admin registered successfully',
+        'data': f'{new_user.id}'}), 201
 
 @auth_views.post("/refresh")
 @jwt_required(refresh=True)

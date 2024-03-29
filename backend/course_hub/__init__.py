@@ -11,18 +11,25 @@ from pathlib import Path
 from flask_mail import Mail
 from mailtrap import MailtrapClient
 
-
 roles = [Admin, Instructor, Student]
 
 jwt = JWTManager()
 app = Flask(__name__, instance_relative_config=True)
 
-app.config['MAIL_SERVER']='sandbox.smtp.mailtrap.io'
-app.config['MAIL_PORT'] = 2525
-app.config['MAIL_USERNAME'] = '43f98cc6600bf3'
-app.config['MAIL_PASSWORD'] = environ.get('MAIL_PASS')
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
+#testing mail sending
+# app.config['MAIL_SERVER']='sandbox.smtp.mailtrap.io'
+# app.config['MAIL_PORT'] = 2525
+# app.config['MAIL_USERNAME'] = '43f98cc6600bf3'
+# app.config['MAIL_PASSWORD'] = environ.get('TESTING_MAIL_PASS')
+# app.config['MAIL_USE_TLS'] = True
+# app.config['MAIL_USE_SSL'] = False
+#prod mail sending
+# app.config['MAIL_SERVER']='live.smtp.mailtrap.io'
+# app.config['MAIL_PORT'] = 587
+# app.config['MAIL_USERNAME'] = 'api'
+# app.config['MAIL_PASSWORD'] = environ.get('PROD_MAIL_PASS')
+# app.config['MAIL_USE_TLS'] = True
+# app.config['MAIL_USE_SSL'] = False
 
 mail = Mail(app)
 client = MailtrapClient(token=environ.get('MAIL_TRAP_TOKEN'))
