@@ -91,8 +91,9 @@ def forgot_password():
             'data': None,
             'error': 'incorrect email'}),400
     if user.role == 0:
-        user.reset_token = str(uuid4())
-        user.save()
+        if user.reset_token is None:
+            user.reset_token = str(uuid4())
+            user.save()
         return jsonify({
         'message': 'here is the reset token please reset your password',
         'data': f'{user.reset_token}'}), 201
@@ -106,6 +107,49 @@ def forgot_password():
         subject="Reset Password Code",
         text="Reset Password Code",
         html=generate_html_email(html_message, user.name, user.reset_token)
+    )
+    client.send(mail=mail)
+    return jsonify({
+    'message': 'please check your email for reset token',
+    'data': None}), 201
+
+
+@auth_views.route('/request-activation-token', methods=['POST'])
+def request_activation_token():
+    """request-activation-token"""
+    json_data = request.get_json()
+    if not json_data:
+        return {"message": "Must provide email"}, 400
+    try:
+        email = json_data['email']
+    except KeyError as err:
+        return {"message": "Must provide email"}, 422
+    user = storage.getUserByEmail(email)
+    if not user:
+        return jsonify({
+            'message': 'fail',
+            'data': None,
+            'error': 'incorrect email'}),400
+    if user and user.enabled == True:
+        return jsonify({
+            'message': 'fail',
+            'data': "user is already active",
+            'error': 'already activated'}),400
+    if user.activation_token is None:
+        user.activation_token = str(uuid4())
+        user.save()
+    if user.role == 0:
+        return jsonify({
+        'message': 'here is the reset token please activate your account',
+        'data': f'{user.activation_token}'}), 201
+
+    html_message = '<p>Sorry to hear you didn;t recive activation token</p>\n<p>Here is your activation token:</p>'
+    mail = Mail(
+        sender=Address(email="admin@techiocean.tech", name="techiocean.tech"),
+        to=[Address(email=user.email)],
+        subject="Resend Activation Token",
+        text="Resend Activation Token",
+        html=generate_html_email(html_message, user.name, user.activation_token)
     )
     client.send(mail=mail)
     return jsonify({
