@@ -18,14 +18,10 @@ function CreateAdmin() {
       let response = await api.post(`${config.auth}/craete_admin`, values);
       if (response.status === 201) {
         setisLoading(false);
-        toast.success('Course saved successfully!', {
-          position: 'top-center',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+        toast.success(response.data.message);
+        setTimeout(() => {
+          nav('/');
+        }, 2000);
       } else {
         setisLoading(false);
       }

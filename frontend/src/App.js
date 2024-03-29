@@ -9,6 +9,8 @@ import Login from './components/login/Login';
 import Activation from './components/activation/activation';
 import Logout from './components/logout/Logout';
 import Register from './components/register/Register';
+import ResetPassword from './components/Password-components/ResetPassword/ResetPassword';
+import ForgotPassword from './components/Password-components/ForgotPassword/ForgotPassword';
 import CreateAdmin from './components/CreateAdmin/CreateAdmin';
 import Courses from './components/courses/Courses'
 import NotFound from './components/not-found/NotFound'
@@ -73,6 +75,8 @@ function App() {
           ),
         },
         { path: "register", element: <Register /> },
+        { path: "forget-password", element: <ForgotPassword /> },
+        { path: "reset-password", element: <ResetPassword /> },
         {
           path: "courses",
           // element: <Layout />,
