@@ -1,16 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import "./activation.css";
 import * as yup from "yup";
 import config from "../config";
-import { UserDataContext } from "../UserContextProvider/UserContextProvider";
 import api from "../api";
 import { useLocation } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function Activation() {
-  const userContext = useContext(UserDataContext);
 
   const location = useLocation();
   const [isLoading, setisLoading] = useState(false);

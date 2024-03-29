@@ -9,6 +9,7 @@ import Login from './components/login/Login';
 import Activation from './components/activation/activation';
 import Logout from './components/logout/Logout';
 import Register from './components/register/Register';
+import CreateAdmin from './components/CreateAdmin/CreateAdmin';
 import Courses from './components/courses/Courses'
 import NotFound from './components/not-found/NotFound'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
@@ -105,7 +106,12 @@ function App() {
       ),
       children: [
         { index: true, element: <ApproveCourses /> },
-
+        { path: "create-admin" ,
+        element: (
+          <ProtectedRoute roles={["Admin"]}>
+            <CreateAdmin />
+          </ProtectedRoute>
+        )},
         { path: "showCategories", element: <ShowCategories /> },
         { path: "SearchCategory", element: <SearchCategory /> },
         { path: "addCategory", element: <AddCategory /> },
