@@ -9,6 +9,7 @@ from models.student import Student
 from flask_jwt_extended import JWTManager
 from pathlib import Path
 from flask_mail import Mail
+from mailtrap import MailtrapClient
 
 
 roles = [Admin, Instructor, Student]
@@ -24,7 +25,7 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 
 mail = Mail(app)
-
+client = MailtrapClient(token=environ.get('MAIL_TRAP_TOKEN'))
 app.config.from_object('config.default')
 
 app.config.from_pyfile('config.py')
