@@ -21,8 +21,9 @@ from flask_jwt_extended import (
     current_user,
 )
 from utils.auth_utils import user_required
-from course_hub import mail
+from course_hub import mail, client
 from flask_mail import Message
+from mailtrap import Mail, Address
 
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
@@ -39,6 +40,8 @@ def sign_up():
         new_user = SignUpSchema().load(data)
     except ValidationError as e:
         return jsonify({"validation_error": e.messages}), 422
+    if new_user.role == 0:
+        new_user.enabled = True
     new_user.save()
     new_data = role_data(data)
     new_data['id'] = new_user.id
@@ -46,9 +49,17 @@ def sign_up():
     if new_user.role == 2:
         role.interested = data.get('interestedIn')
     if new_user.role != 0:
-        msg = Message('Welcome To Course Hub WebSite', sender = 'techiocean.tech', recipients = [new_user.email])
-        msg.body = generate_html_email(new_user.activation_token)
-        mail.send(msg)
+        # msg = Message('Welcome To Course Hub WebSite', sender = 'admin@techiocean.tech', recipients = [new_user.email])
+        # msg.html = generate_html_email(new_user.name, new_user.activation_token)
+        # mail.send(msg)    
+        mail = Mail(
+            sender=Address(email="admin@techiocean.tech", name="ACtivation Code"),
+            to=[Address(email="5miiss96@gmail.com")],
+            subject="Welcome To Course Hub WebSite",
+            text="Congrats for sending test email with Mailtrap!",
+            html=generate_html_email(new_user.name, new_user.activation_token)
+        )
+        client.send(mail=mail)
     role.save()
     return jsonify({
         'message': 'user registered successfully please activate via activation_token from email',
@@ -86,6 +97,28 @@ def activate():
         'message': 'user has been successfully activated',
         'data': f'{user.id}'}), 200
 
+
+@auth_views.route('/craete_admin', methods=['POST'])
+@swag_from(os.path.join(current_directory, 'documentation/auth/craete_admin.yml'))
+@jwt_required()
+@user_required(allowed_roles={0})
+def craete_admin():
+    """method used to create a new admin user"""
+    data = request.get_json()
+    try:
+        new_user = SignUpSchema().load(data)
+    except ValidationError as e:
+        return jsonify({"validation_error": e.messages}), 422
+    new_user.role = 0
+    new_user.enabled = True
+    new_user.save()
+    admin = Admin()
+    admin.user = new_user
+    admin.id = new_user.id
+    admin.save()
+    return jsonify({
+        'message': 'admin registered successfully',
+        'data': f'{new_user.id}'}), 201
 
 @auth_views.post("/refresh")
 @jwt_required(refresh=True)
@@ -190,7 +223,7 @@ def role_data(data):
     return new_data
 
 
-def generate_html_email(activation_code):
+def generate_html_email(name, activation_code):
     html_content = f"""
     <!DOCTYPE html>
     <html lang="en">
@@ -232,7 +265,7 @@ def generate_html_email(activation_code):
     </head>
     <body>
       <div class="container">
-        <h1>Hello there!</h1>
+        <h1>Hello there {name}!</h1>
         <p>Welcome to Course Hub Website.</p>
         <p>Here is your activation code:</p>
         <p class="activation-code">{activation_code}</p>
