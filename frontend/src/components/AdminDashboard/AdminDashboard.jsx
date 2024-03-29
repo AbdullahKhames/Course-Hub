@@ -15,6 +15,7 @@ export default function AdminDashboard(props) {
     sections: false,
     lessons: false,
     categories: false,
+    create_admin: false
   });
 
   const toggleOptions = (sectionId) => {
@@ -184,6 +185,25 @@ export default function AdminDashboard(props) {
                   <div className="option">
                     <span className="icon">✖</span> Delete
                   </div> */}
+                </div>
+              )}
+            </div>
+            <div className="dash-section" id="categories">
+              <div className="dash-section-title" onClick={() => toggleOptions('create_admin')}>
+              Create New Admin
+              </div>
+              {optionsVisibility.create_admin && (
+                
+                <div className="options">
+                  {userData.role === 0 ? 
+                  <>
+                  <Link className="nav-link" to='create-admin'>
+                    <div className="option">
+                        <span className="icon">+</span> Create
+                    </div>
+                  </Link>
+                  </> : null}
+
                 </div>
               )}
             </div>
