@@ -30,7 +30,6 @@ function Slider() {
 
   return (
     <Carousel>
-      {console.log(courses)}
       {loading ? (
         <Loading />
       ) : (
