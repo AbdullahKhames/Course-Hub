@@ -5,6 +5,7 @@ import './register.css';
 import api from '../api';
 import config from '../config';
 import * as yup from 'yup';
+import toast, { Toaster } from "react-hot-toast";
 
 function Register() {
   const [isLoading, setisLoading] = useState(false);
@@ -19,7 +20,10 @@ function Register() {
       let response = await api.post(`${config.auth}/sign-up`, values);
       if (response.status === 201) {
         setisLoading(false);
-        nav('/activate');
+        toast.success(response.data.message);
+        setTimeout(() => {
+          nav('/activate');
+        }, 3000);
       } else {
         setisLoading(false);
       }
@@ -226,6 +230,7 @@ function Register() {
         <div className="container">
           want to activate your email?<Link to="/activate"> Activate Here</Link>
         </div>
+        <Toaster />
       </div>
     </>
   );
