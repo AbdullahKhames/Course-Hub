@@ -1,7 +1,8 @@
 # Course-Hub
 ---
 
-
+A link to a deployed version of the web site
+https://www.techiocean.tech/
 
 how to run alocal version of the application on your own servers
 
