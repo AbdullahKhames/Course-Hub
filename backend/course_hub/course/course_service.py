@@ -5,7 +5,7 @@ from os import getenv
 from flask import jsonify
 from marshmallow import ValidationError
 
-from sqlalchemy import create_engine, func, and_
+from sqlalchemy import create_engine, func, and_, or_
 from sqlalchemy.orm import scoped_session, sessionmaker, aliased
 from course_hub.course.schemas.course_schema import CourseSchema, UpdateCourseSchema
 
@@ -14,6 +14,7 @@ from models.section import Section
 from models.lesson import Lesson
 from models.category import Category
 from models.instructor import Instructor
+from models.user import User
 from utils import sess_manager
 from utils.file_service import save_base64_image, save_image
 class CourseService:
@@ -23,14 +24,26 @@ class CourseService:
         sess_manager.reload()
         self.__session = sess_manager.session
         
-    def get_courses(self, page, per_page):
-        """method to paginate courses"""
-        offset = (page - 1) * per_page
-
-        results = self.__session.query(Course)\
-            .offset(offset)\
-                .limit(per_page).all()
-        return results
+    def get_courses(self, page, per_page, query=None):
+        """method to paginate courses and filter by query (Course name, Category name, Instructor name)"""
+        if query:
+            offset = (page - 1) * per_page
+            results = self.__session.query(Course)\
+                .join(Category, Course.category_id == Category.id)\
+                .join(Instructor, Course.instructor_id == Instructor.id)\
+                .join(User, Instructor.id == User.id)\
+                .filter(or_(func.lower(Course.name).like(f"%{query.lower()}%"),
+                            func.lower(Category.name).like(f"%{query.lower()}%"),
+                            func.lower(User.name).like(f"%{query.lower()}%")))\
+                .offset(offset)\
+                    .limit(per_page).all()
+            return results
+        else:
+            offset = (page - 1) * per_page
+            results = self.__session.query(Course)\
+                .offset(offset)\
+                    .limit(per_page).all()
+            return results
     
     def get_not_approved_courses(self, page, per_page, currentUser):
         """method to paginate courses"""
@@ -71,15 +84,28 @@ class CourseService:
                 .limit(per_page).all()
         return results
 
-    def get_courses_by_category(self, category_id, page, per_page):
-        """method to paginate courses"""
-        offset = (page - 1) * per_page
-
-        results = self.__session.query(Course)\
-            .filter(Course.category_id == category_id)\
-            .offset(offset)\
-                .limit(per_page).all()
-        return results
+    def get_courses_by_category(self, category_id, page, per_page, query=None):
+        """method to paginate courses by category and filter by query (Course name, Category name, Instructor name)"""
+        if query:
+            offset = (page - 1) * per_page
+            results = self.__session.query(Course)\
+                .join(Category, Course.category_id == Category.id)\
+                .join(Instructor, Course.instructor_id == Instructor.id)\
+                .join(User, Instructor.id == User.id)\
+                .filter(and_(Course.category_id == category_id,
+                            or_(func.lower(Course.name).like(f"%{query.lower()}%"),
+                                func.lower(Category.name).like(f"%{query.lower()}%"),
+                                func.lower(User.name).like(f"%{query.lower()}%"))) )\
+                .offset(offset)\
+                    .limit(per_page).all()
+            return results
+        else:
+            offset = (page - 1) * per_page
+            results = self.__session.query(Course)\
+                .filter(Course.category_id == category_id)\
+                .offset(offset)\
+                    .limit(per_page).all()
+            return results
 
     def get_categories(self, page, per_page):
         """method to paginate categories"""

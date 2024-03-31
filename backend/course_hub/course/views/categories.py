@@ -47,16 +47,23 @@ def get_courses_category(category_id):
         abort(404)
 
     approved = eval(request.args.get("approved", "false", type=str).capitalize())
+    query = request.args.get("query", None, type=str)
     courses = course_service.get_courses_by_category(
         category_id,
         request.args.get("page", 1, type=int),
-        request.args.get("per_page", 3, type=int)
+        request.args.get("per_page", 3, type=int),
+        query
     )
     if approved:
         courses = list(filter(lambda course: course.approved, courses))
 
-    return jsonify(list(map(lambda category:
-                            category.to_dict(), courses)))
+    return jsonify({
+        'message': 'success' if len(courses) > 0 or not query else 'no results found',
+        'query': query if query else 'all courses',
+        'total_courses': len(courses),
+        'data': list(map(lambda course:
+                            course.to_dict(), courses))
+    })
     # return jsonify([course.to_dict() for course in category.courses])
 
 
