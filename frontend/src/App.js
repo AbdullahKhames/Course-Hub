@@ -44,6 +44,7 @@ import CoursePage from './components/courses/course-page/CoursePage';
 import CategoryPage from './components/categories/categoryPage';
 import NotApproved from './components/not_approved/not_approved';
 import Categories from './components/categories/Categories';
+import CoursesFilter from './components/courses/CoursesFilter';
 
 function App() {
   let routers = createBrowserRouter([
@@ -84,6 +85,7 @@ function App() {
             { index: true, element: <Courses /> },
 
             { path: ":id", element: <CoursePage /> },
+            { path: "filter", element: <CoursesFilter />}
           ],
         },
 

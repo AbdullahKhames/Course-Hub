@@ -6,6 +6,7 @@ import api from "../api";
 import config from "../config";
 import Categories from "../categories/Categories";
 import { MDBContainer, MDBRow } from "mdb-react-ui-kit";
+import Search from "../search/search";
 
 function Home(props) {
   const [categories, setCategories] = useState([]);
@@ -28,17 +29,7 @@ function Home(props) {
 
   return (
     <>
-      <form className="d-flex mx-auto">
-        <input
-          className="form-control me-2 custom-search-input"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-        />
-        <button className="btn btn-outline-success basic" type="submit">
-          Search
-        </button>
-      </form>
+      <Search />
       <br />
       {loading ? (
         <Loading />
