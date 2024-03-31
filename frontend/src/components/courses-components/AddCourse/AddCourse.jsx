@@ -97,7 +97,6 @@ export default function AddCourse(props) {
           const imageFile = values.image;
           const imageBase64 = await convertImageToBase64(imageFile);
           if (imageBase64 !== null && imageBase64 !== undefined){
-            console.log("adding the value");
             values.imageBase64 = imageBase64;
           }
       

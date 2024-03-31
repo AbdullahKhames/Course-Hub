@@ -74,9 +74,7 @@ export default function UpdateCourse(props) {
 
   function convertImageToBase64(imageFile) {
     return new Promise((resolve, reject) => {
-      console.log("before checking");
       if (!(imageFile instanceof Blob) && !(imageFile instanceof File)) {
-        console.log("not instance");
         resolve(null);
         return;
       }
@@ -94,11 +92,9 @@ export default function UpdateCourse(props) {
       const imageFile = values.image;
       const imageBase64 = await convertImageToBase64(imageFile);
       if (imageBase64 !== null && imageBase64 !== undefined){
-        console.log("adding the value");
         values.imageBase64 = imageBase64;
       }
       
-      console.log("outside of the checks");
 
       let response = await api.put(`${config.api}/courses/${values.id}`, values);
       if (response.status === 200)
