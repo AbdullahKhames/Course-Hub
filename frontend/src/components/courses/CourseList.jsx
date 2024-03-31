@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Loading from "../Loading/loading";
 import CourseCard from "../cards/CourseCard";
 import { useContext } from "react";
+import toast from "react-hot-toast";
 import { UserDataContext } from "../UserContextProvider/UserContextProvider";
 import {
   MDBCol,
@@ -12,15 +13,17 @@ import {
   MDBRow,
 } from "mdb-react-ui-kit";
 
-function CourseList({ filter = null }) {
+function CourseList({ filter = null, query = null}) {
   const userContext = useContext(UserDataContext);
   const userData = userContext.userData;
   const [courses, setCourses] = React.useState([]);
   const [loading, setLoading] = useState(true);
   let url_api = config.api + "/";
-  if (filter === null) {
+  if (query) {
+    url_api += "courses?approved=true&page=1&per_page=40&query=" + query;
+  } else if (filter === null) {
     url_api += "courses?approved=true&page=1&per_page=20";
-  } else {
+  }else {
     // categories/<category_id>/courses
     url_api += "categories/" + filter.id + "/courses?approved=1&page=1&per_page=6";
   }
@@ -29,7 +32,14 @@ function CourseList({ filter = null }) {
       .get(url_api)
       .then((response) => {
         if (response.status === 200) {
-          setCourses(response.data);
+          setCourses(response.data.data);
+          if (query) {
+            if (response.data.data.length === 0) {
+              toast.error("No courses found");
+            } else if (response.data.message) {
+              toast.success(response.data.message);
+            }
+          }
           setLoading(false);
         }
       })
