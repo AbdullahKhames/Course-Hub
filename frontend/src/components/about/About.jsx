@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import "./About.css";
 import { useContext } from "react";
 import { UserDataContext } from "../UserContextProvider/UserContextProvider";
+import Search from "../search/search";
 
 function About() {
   const userContext = useContext(UserDataContext);
@@ -19,6 +20,7 @@ function About() {
 
   return (
     <>
+      <Search />
       <div className="about-section about-body">
         <h1>About Us Page</h1>
         <p>Some text about who we are and what we do.</p>
@@ -36,14 +38,25 @@ function About() {
             <img
               src="./users/yousef.jpg"
               alt="Yousef"
-              style={{ width: "100%", height: "500px", paddingLeft: "10%", paddingRight: "10%", paddingTop: "5px"}}
+              style={{
+                width: "100%",
+                height: "500px",
+                paddingLeft: "10%",
+                paddingRight: "10%",
+                paddingTop: "5px",
+              }}
             />
             <div className="about-container">
               <br />
               <h2>Yousef Ahmed</h2>
               <p className="title">Software Engineer</p>
               <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-              <p>GitHub: <a href="https://github.com/Y-Baker" className="redirect">Y-Baker</a></p>
+              <p>
+                GitHub:{" "}
+                <a href="https://github.com/Y-Baker" className="redirect">
+                  Y-Baker
+                </a>
+              </p>
               <p>
                 <Button
                   className="basic-p about-button"
@@ -61,14 +74,28 @@ function About() {
             <img
               src="./users/AbdullahKhames.jpg"
               alt="Abdullah"
-              style={{ width: "100%", height: "500px", paddingLeft: "10%", paddingRight: "10%", paddingTop: "5px"}}
+              style={{
+                width: "100%",
+                height: "500px",
+                paddingLeft: "10%",
+                paddingRight: "10%",
+                paddingTop: "5px",
+              }}
             />
             <div className="about-container">
-            <br />
+              <br />
               <h2>Abdullah Khames</h2>
               <p className="title">Software Engineer</p>
               <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-              <p>GitHub: <a href="https://github.com/AbdullahKhames" className="redirect">AbdullahKhames</a></p>
+              <p>
+                GitHub:{" "}
+                <a
+                  href="https://github.com/AbdullahKhames"
+                  className="redirect"
+                >
+                  AbdullahKhames
+                </a>
+              </p>
               <p>
                 <Button
                   className="basic-p about-button"
@@ -81,31 +108,6 @@ function About() {
             </div>
           </div>
         </div>
-        {/* <div className="about-column"> 
-          <div className="about-card">
-            <img
-              src="./users/Mohammed.jpg"
-              alt="Mohamed"
-              style={{ width: "100%", height: "500px", paddingLeft: "10%", paddingRight: "10%", paddingTop: "5px"}}
-            />
-            <div className="about-container">
-            <br />
-              <h2>Mohamed Elshafae</h2>
-              <p className="title">Software Engineer</p>
-              <p>Some text that describes me lorem ipsum ipsum lorem.</p>
-              <p>GitHub: <a href="https://github.com/MohamedElshafae" className="redirect">MohamedElshafae</a></p>
-              <p>
-                <Button
-                  className="basic-p about-button"
-                  variant="primary"
-                  onClick={() => handleContact("mohamedelshafae888@gmail.com")}
-                >
-                  Contact
-                </Button>
-              </p>
-            </div>
-          </div>
-        </div>*/}
       </div>
     </>
   );

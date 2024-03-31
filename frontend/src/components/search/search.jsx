@@ -1,20 +1,20 @@
 import { useNavigate } from "react-router-dom";
+import "./search.css";
 
 function Search() {
   const navigate = useNavigate();
   return (
     <form
-      className="d-flex mx-auto"
+      className="d-flex mx-auto search-form"
       onSubmit={(e) => {
         e.preventDefault();
         const query = e.target.elements.search.value;
         if (!query) return;
-        // i want to check if the url is /courses/filter/?* to refresh the page
         if (window.location.pathname === "/courses/filter/") {
           window.location.reload();
         }
-    
-        navigate(`/courses/filter/`, { state: { query } });
+
+        navigate(`/courses/filter/`, { state: { query } });  // to improve the search functionality, we can add a query parameter to the URL
       }}
     >
       <input

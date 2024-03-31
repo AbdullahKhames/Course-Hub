@@ -14,6 +14,7 @@ import {
   MDBCardBody,
   MDBCardImage,
 } from "mdb-react-ui-kit";
+import Search from "../search/search";
 
 function UserProfile({ data, owner }) {
   let courses = [];
@@ -24,6 +25,8 @@ function UserProfile({ data, owner }) {
     }
   }
   return (
+    <>
+    <Search />
     <section style={{ backgroundColor: "#eee" }}>
       <MDBContainer className="py-5">
         <MDBRow>
@@ -161,6 +164,7 @@ function UserProfile({ data, owner }) {
         )}
       </MDBContainer>
     </section>
+    </>
   );
 }
 

@@ -12,6 +12,7 @@ import NotFound from "../../not-found/NotFound";
 import NotApproved from "../../not_approved/not_approved";
 import EnrollCard from "./EnrollCard";
 import CourseContent from "./Content";
+import Search from "../../search/search";
 
 function CoursePage() {
   const userContext = useContext(UserDataContext);
@@ -64,94 +65,101 @@ function CoursePage() {
     return <NotApproved />;
   } else {
     return (
-      <section className="course-page" style={{ backgroundColor: "#eee" }}>
-        <Container>
-          <Row>
-            <Col md={8}>
-              <Card>
-                <Card.Header as="div" className="course-title">
-                  {course.name}
-                </Card.Header>
-                <Card.Body>
-                  <Card.Text className="course-description">
-                    {course.description}
-                  </Card.Text>
-                  <Card.Text className="course-details">
-                    <ul>
-                      {course.category_id && (
+      <>
+        <Search />
+        <section className="course-page" style={{ backgroundColor: "#eee" }}>
+          <Container>
+            <Row>
+              <Col md={8}>
+                <Card>
+                  <Card.Header as="div" className="course-title">
+                    {course.name}
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Text className="course-description">
+                      {course.description}
+                    </Card.Text>
+                    <Card.Text className="course-details">
+                      <ul>
+                        {course.category_id && (
+                          <li>
+                            Category{" "}
+                            <Link to={`/categories/${course.category_id}`}>
+                              <span className="redirect">
+                                {course.category_name}
+                              </span>
+                            </Link>
+                          </li>
+                        )}
+                        <li>Total Hours {course.hours}</li>
+                        <li>Total Students {course.num_enrolled}</li>
                         <li>
-                          Category{" "}
-                          <Link to={`/categories/${course.category_id}`}>
+                          Created By{" "}
+                          <Link to={`/users/${course.instructor_id}`}>
                             <span className="redirect">
-                              {course.category_name}
+                              {course.instructor_name}
                             </span>
                           </Link>
                         </li>
-                      )}
-                      <li>Total Hours {course.hours}</li>
-                      <li>Total Students {course.num_enrolled}</li>
-                      <li>
-                        Created By{" "}
-                        <Link to={`/users/${course.instructor_id}`}>
-                          <span className="redirect">
-                            {course.instructor_name}
-                          </span>
-                        </Link>
-                      </li>
-                    </ul>
-                  </Card.Text>
-                  <Card.Text className="footer-text">
-                    <div className="icon-block" style={{ width: "220px" }}>
-                      <div className="last-updated-icon"></div>
-                      <span className="icon-text">
-                        Last updated{" "}
-                        {course.updated_at
-                          .substring(0, 10)
-                          .replace(/-/g, "/")
-                          .split("/")
-                          .reverse()
-                          .join("/")}
-                      </span>
-                    </div>
-                    <div className="icon-block">
-                      <div className="Language-icon"></div>
-                      <span className="icon-text">English</span>
-                    </div>
-                    <div className="icon-block" style={{ width: "160px" }}>
-                      <div className="infinity-icon"></div>
-                      <span className="icon-text">Full lifetime access</span>
-                    </div>
-                  </Card.Text>
-                </Card.Body>
-              </Card>
+                      </ul>
+                    </Card.Text>
+                    <Card.Text className="footer-text">
+                      <div className="icon-block" style={{ width: "220px" }}>
+                        <div className="last-updated-icon"></div>
+                        <span className="icon-text">
+                          Last updated{" "}
+                          {course.updated_at
+                            .substring(0, 10)
+                            .replace(/-/g, "/")
+                            .split("/")
+                            .reverse()
+                            .join("/")}
+                        </span>
+                      </div>
+                      <div className="icon-block">
+                        <div className="Language-icon"></div>
+                        <span className="icon-text">English</span>
+                      </div>
+                      <div className="icon-block" style={{ width: "160px" }}>
+                        <div className="infinity-icon"></div>
+                        <span className="icon-text">Full lifetime access</span>
+                      </div>
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
 
-              {/* Additional content, such as course modules, lectures, etc., can be added here 
+                {/* Additional content, such as course modules, lectures, etc., can be added here 
               <svg aria-hidden="false" aria-label="Course Language" role="img" focusable="false" class="ud-icon ud-icon-xsmall ud-icon-color-neutral icon"><use xlink:href="#icon-language"></use></svg>*/}
-            </Col>
+              </Col>
 
-            <Col md={4}>
-              <Card className="course-image">
-                <Card.Body>
-                  {/* <Card.Text>Instructor details and bio go here.</Card.Text> */}
-                  <Card.Img
-                    variant="top"
-                    // src={course.image_url}
-                    src={course.image ? `${config.baseURL}/images/${course.image}` : "./courses/Default.jpg"}
-                    style={{ width: "100%" }}
-                  />
-                </Card.Body>
-              </Card>
-              <EnrollCard user={userData} course={course} />
-            </Col>
-          </Row>
-          <br />
-          <Row>
-            <Col>
-              <CourseContent user={userData} course={course} />
-            </Col>
-          </Row>
-        </Container>
-      </section>
+              <Col md={4}>
+                <Card className="course-image">
+                  <Card.Body>
+                    {/* <Card.Text>Instructor details and bio go here.</Card.Text> */}
+                    <Card.Img
+                      variant="top"
+                      // src={course.image_url}
+                      src={
+                        course.image
+                          ? `${config.baseURL}/images/${course.image}`
+                          : "./courses/Default.jpg"
+                      }
+                      style={{ width: "100%" }}
+                    />
+                  </Card.Body>
+                </Card>
+                <EnrollCard user={userData} course={course} />
+              </Col>
+            </Row>
+            <br />
+            <Row>
+              <Col>
+                <CourseContent user={userData} course={course} />
+              </Col>
+            </Row>
+          </Container>
+        </section>
+      </>
     );
   }
 }

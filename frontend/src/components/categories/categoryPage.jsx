@@ -6,13 +6,11 @@ import api from "../api";
 import config from "../config";
 import Loading from "../Loading/loading";
 import CourseList from "../courses/CourseList";
+import Search from "../search/search";
 
 function CategoryPage() {
   const { id } = useParams();
-  const url_api =
-    config.api +
-    "/categories/" +
-    id;
+  const url_api = config.api + "/categories/" + id;
 
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState(null);
@@ -38,24 +36,29 @@ function CategoryPage() {
     if (category) {
       window.location.reload();
     } else {
-    getCategory(url_api);
+      getCategory(url_api);
     }
   }, [url_api]);
-
 
   if (loading) {
     return <Loading />;
   } else {
     return (
-      <div>
-        <div className="SubHeading course-title course-description">
-          <br />
-            <Link to="/categories" className="redirect">Categories</Link> / {category.name}
+      <>
+        <Search />
+        <div>
+          <div className="SubHeading course-title course-description">
+            <br />
+            <Link to="/categories" className="redirect">
+              Categories
+            </Link>{" "}
+            / {category.name}
+          </div>
+          <div className="row">
+            <CourseList filter={category} />
+          </div>
         </div>
-        <div className="row">
-          <CourseList filter={category} />
-        </div>
-      </div>
+      </>
     );
   }
 }
