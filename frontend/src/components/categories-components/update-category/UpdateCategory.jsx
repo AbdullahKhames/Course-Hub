@@ -43,7 +43,7 @@ export default function UpdateCategory() {
     api.get(`${config.api}/categories/${category_id}/courses?page=${page}&per_page=${per_page}`)
     .then((resp) => {
       toast.success("category courses retrived");
-      setcategoryCourses(resp.data);
+      setcategoryCourses(resp.data.data);
     }).catch((err)=> {
       console.error(err);
       toast.error("something went wrong");
