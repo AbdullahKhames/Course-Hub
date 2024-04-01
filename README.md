@@ -1,44 +1,45 @@
-# Course-Hub
+<div align="center">
+  <img src="https://i.postimg.cc/SKchmdTr/Course-Hub.png" alt="Course Hub" width="150"/>
+</div>
+
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=900&size=34&pause=1000&width=435&lines=Course-Hub)](https://git.io/typing-svg)
+
 ---
+<br />
 
-A link to a deployed version of the web site
-https://www.techiocean.tech/
+## Deployed Version
+* [Course-Hub](https://www.techiocean.tech/)
+* [API Server (Swagger)](https://api.techiocean.tech/apidocs/)
 
-how to run alocal version of the application on your own servers
+<br />
 
+## Build Local
+### lets start with backend
 
-lets start with backend
+- #### first you will download the repo or clone it:
+  ```bash
+  git clone https://github.com/AbdullahKhames/Course-Hub.git
+  ```
 
+- #### second start mysql service
+  ```bash
+  sudo service mysql start
+  ```
 
-first you will download the repo or clone it with this command :
-git clone https://github.com/AbdullahKhames/Course-Hub.git
+- #### third configure the database server: a mysql database
+  ```bash
+  cd backend/
+  cat setup_mysql_dev.sql | sudo mysql -u[user] -p
+  ```
 
+- #### Four install dependencies
+  ```bash
+  pip install -r requirements.txt
+  ```
 
-second configure the database server: a mysql database
-    we have a setup_mysql_dev and setup_mysql_test sql scripts and also a dump.sql to create the database
-    application connects to the database based on an environment variable
-
-
-third configure the backend server: a flask application
-    first create a virtual environment call it any thing i like to call it .env with:
-        #python3 -m venv .env
-
-
-    then activate the virtual environment with:
-        source .env/bin/activate
-
-
-    then install the project dependencies with:
-        #pip install -r requirements.txt
-
-
-    then you will need to have a folder called instance in the same directory within it a config.py file
-        with values like those please choose a good secret key
+- #### Five Create a folder called instance in the same directory within it a config.py file with
         ```
         from datetime import timedelta
-
-
-
 
         SECRET_KEY = 'super_secret_key'
         SESSION_COOKIE_SECURE = True
@@ -53,45 +54,45 @@ third configure the backend server: a flask application
         JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
         JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
         ```
-    then configure some environment variables
-        run
-        source bash_scripts/db_dev.sh if testing use db_test.sh
-        this will do some environment variables for you on linux else go put it on other OS in environment variable
-   
-    last you will need to configure this environment variable
-        APP_CONFIG_FILE to the file in the config folder if not set it goes to production.py file
-        seting it in windows
-            $env:APP_CONFIG_FILE = "$(Get-Location)\config\development.py"
-        in linux:
-            cwd=$(pwd)
-            export APP_CONFIG_FILE="${cwd}/config/development.py"
-   
-    if you want to run on a production server use gunicorn with simmilar gunicorn config file
-        ```
-        import os
 
+- #### Six configure the backend server: a flask application
+  ```bash
+  python3 -m venv .env                 // create virtual environment
+  source .env/bin/active              // activate the virtual environment
+  source bash_scripts/db_dev.sh      // add app configration
+  export APP_CONFIG_FILE="${cwd}/Course_Hub/backend/config/development.py"
+  python3 app.py
+  ```
 
+  ### Time For Front-end
+  ```bash
+  cd ./frontend/
+  npm run start
+  ```
 
+<br />
 
-        workers = int(os.environ.get('GUNICORN_PROCESSES', '2'))
-        threads = int(os.environ.get('GUNICORN_THREADS', '4'))        
-        bind = os.environ.get('GUNICORN_BIND', '0.0.0.0:5000')
-        forwarded_allow_ips = '*'
-        secure_scheme_headers = {'X-Forwarded-Proto': 'https'}
-        # Log file settings
-        loglevel = 'info'
-        accesslog = 'access.log'
-        errorlog = 'error.log'
-        ```
-    then use gunicorn --config gunicorn_config.py app:app
+ ## Deploy On Server Using gunicorn with simmilar gunicorn config file
+   ```bash
+      import os
 
-
+      workers = int(os.environ.get('GUNICORN_PROCESSES', '2'))
+      threads = int(os.environ.get('GUNICORN_THREADS', '4'))        
+      bind = os.environ.get('GUNICORN_BIND', '0.0.0.0:5000')
+      forwarded_allow_ips = '*'
+      secure_scheme_headers = {'X-Forwarded-Proto': 'https'}
+      # Log file settings
+      loglevel = 'info'
+      accesslog = 'access.log'
+      errorlog = 'error.log'
+   ```
+  
+- ### then use gunicorn --config gunicorn_config.py app:app
     extra if you want to secure this with an ssl certificate you can create certificate with certbot + nginx
     nginx server block be like this
     first configure the nginx to the domain name my domain name for backend service is api.techiocean.tech;
-
-
-    ```
+  
+    ```bash
     cat /etc/nginx/sites-available/backend
     server {
         listen 80;
@@ -108,15 +109,12 @@ third configure the backend server: a flask application
     ```
 
 
-
-
-
-
-    then
+    #### then
+    ```bash
     sudo certbot --nginx -d 'your_domain_name' my domain name for backend service is api.techiocean.tech;
+    ```
 
-
-    then it will be like this
+    #### then it will be like this
     ```
     cat /etc/nginx/sites-available/backend
     server {
@@ -162,7 +160,8 @@ third configure the backend server: a flask application
 
     }
     ```
-    fourth configure the frontend server: a react application
+  
+- #### fourth configure the frontend server: a react application
         first you will need to have npm installed on your machine
         then cd into frontend dir then use
         npm install
@@ -184,6 +183,7 @@ third configure the backend server: a flask application
 
         then configure nginx like this to accept http requests
         ```
+  
         server {
         listen 80 default_server;
         listen [::]:80 default_server;
@@ -315,8 +315,8 @@ third configure the backend server: a flask application
     $./restart_nginx.sh
 
 
-a file that explain the deployment process in details
-https://docs.google.com/document/d/1oo-N-8MD9FDzWHOHQ0TZO7IIWqTmDp0-0YWhC9BJLAM/edit
+## Official Documentation
+- [Click here](https://docs.google.com/document/d/1oo-N-8MD9FDzWHOHQ0TZO7IIWqTmDp0-0YWhC9BJLAM/edit)
 
 ## Authors :black_nib:
 
